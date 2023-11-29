@@ -1,0 +1,147 @@
+[
+    /////////////////
+    // BOTTOM BARS //
+    /////////////////
+    {
+        "layer": "top", // Waybar at top layer
+        "position": "bottom", // Waybar position (top|bottom|left|right)
+        "height": 25, // Waybar height (to be removed for auto height)
+        "spacing": 0, // Gaps between modules (4px)
+        "output": "DP-2",
+        // Choose the order of the modules
+        "modules-left": ["custom/public-ip", "custom/tailscale"],
+        "modules-center": [],
+        "modules-right": ["mpd", "pulseaudio", "cpu", "memory", "custom/notification", "idle_inhibitor", "tray"],
+        "mpd": {
+            "format": "{stateIcon} {artist} - {album} - {title}",
+            "format-disconnected": "Disconnected ",
+            "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
+            "unknown-tag": "N/A",
+            "interval": 2,
+            "consume-icons": {
+                "on": " "
+            },
+            "random-icons": {
+                "off": "<span color=\"#f53c3c\"></span> ",
+                "on": " "
+            },
+            "repeat-icons": {
+                "on": " "
+            },
+            "single-icons": {
+                "on": "1 "
+            },
+            "state-icons": {
+                "paused": "",
+                "playing": ""
+            },
+            "tooltip-format": "MPD (connected)",
+            "tooltip-format-disconnected": "MPD (disconnected)",
+            "on-click": "mpc toggle",
+            "on-click-right": "mpc next"
+        },
+        "idle_inhibitor": {
+            "format": "{icon}",
+            "format-icons": {
+                "activated": "",
+                "deactivated": ""
+            }
+        },
+        "network": {
+            "interface": "br0",
+            "format": "{ifname}",
+            "format-wifi": "{essid} ({signalStrength}%) ",
+            "format-ethernet": " {ipaddr}/{cidr}",
+            "format-disconnected": "", //An empty format will hide the module.
+            "tooltip-format": "{ifname} via {gwaddr} ",
+            "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+            "tooltip-format-ethernet": "{ifname} ",
+            "tooltip-format-disconnected": "Disconnected",
+            "max-length": 50
+        },
+        "tray": {
+            // "icon-size": 21,
+            "spacing": 5
+        },
+        "cpu": {
+            "format": "{usage}% ",
+            "tooltip": false
+        },
+        "memory": {
+            "format": "{}% "
+        },
+        "custom/tailscale" : {
+            "format": "嬨 Tailscale - {}",
+            "exec":"tailscale switch --list | grep '*' | cut -d' ' -f1",
+            "on-click": "tailscale switch $(tailscale switch --list | grep -v '*' | cut -d' ' -f1)",
+            "on-click-right": "/usr/bin/trayscale",
+            "restart-interval": 2
+        },
+        "custom/public-ip" : {
+            "format": "爵 {}",
+            "exec":"curl -sSL 'https://api.ipify.org?format=txt'",
+            "interval": 30
+        },
+        "pulseaudio": {
+            "ignored-sinks": ["Easy Effects Sink"],
+            "format": "{volume}% {icon} {format_source}",
+            "format-muted": " {format_source}",
+            "format-source": "{volume}% ",
+            "format-source-muted": "",
+            "format-icons": {
+                "headphone": "",
+                "hands-free": "",
+                "headset": "",
+                "phone": "",
+                "portable": "",
+                "car": "",
+                "default": ["", "", ""]
+            },
+            "on-click": "pavucontrol-qt"
+        },
+        "custom/notification": {
+                "tooltip": false,
+                "format": "{icon}",
+                "format-icons": {
+                "notification": "<span foreground='red'><sup></sup></span>",
+                "none": "",
+                "dnd-notification": "<span foreground='red'><sup></sup></span>",
+                "dnd-none": ""
+            },
+                "return-type": "json",
+                "exec-if": "which swaync-client",
+                "exec": "swaync-client -swb",
+                "on-click": "swaync-client -t -sw",
+                "on-click-right": "swaync-client -d -sw",
+                "escape": true
+            },
+    },
+    /////////////////
+    //   TOP MAIN BAR   //
+    /////////////////
+    {
+        "layer": "top", // Waybar at top layer
+        "position": "top", // Waybar position (top|bottom|left|right)
+        "height": 25, // Waybar height (to be removed for auto height)
+        "spacing": 0, // Gaps between modules (4px)
+        // Choose the order of the modules
+        "modules-left": ["hyprland/workspaces"],
+        "modules-center": ["hyprland/window"],
+        "modules-right": ["idle_inhibitor", "clock"],
+        "sway/mode": {
+            "format": "<span style=\"italic\">{}</span>"
+        },
+	"idle_inhibitor": {
+	    "format": "{icon}",
+	    "format-icons": {
+		"activated": "☕",
+		"deactivated": "😴"
+	    }
+	},
+        "clock": {
+            "timezone": "Europe/Paris",
+            "format": "{:%H:%M - %Y-%m-%d}",
+            "interval": 1
+        }
+    }
+]
